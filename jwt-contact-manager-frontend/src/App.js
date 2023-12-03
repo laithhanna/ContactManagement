@@ -1,10 +1,18 @@
 import "./App.css";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
-function App() {
+const App = () => {
   return (
-    <div>
-      <h1>Hello From Contacts Manager Frontend</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Router>
   );
-}
+};
+
 export default App;
