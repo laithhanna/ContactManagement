@@ -53,7 +53,10 @@ const Login = () => {
       navigate("/dashboard");
       // navigate('/dashboard'); // Uncomment and update with your success route
     } catch (error) {
-      setError(error.response.data.message || "An error occurred during login");
+      const errorMessage = error.response
+        ? error.response.data.message
+        : "An error occurred during login";
+      setError(errorMessage);
       setOpenErrorModal(true);
       setIsSubmitting(false);
     }

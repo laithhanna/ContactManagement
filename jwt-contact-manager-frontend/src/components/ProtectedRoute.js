@@ -1,24 +1,20 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Navigate, useLocation } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
-const isAuthenticated = () => {
-  const token = localStorage.getItem("authToken");
-  return !!token;
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
 };
-
-const ProtectedRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      isAuthenticated() ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{ pathname: "/login", state: { from: props.location } }}
-        />
-      )
-    }
-  />
-);
 
 export default ProtectedRoute;

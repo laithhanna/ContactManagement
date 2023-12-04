@@ -1,6 +1,7 @@
 // Dashboard.js
 import React, { useState, useEffect } from "react";
 import axios from "../axios";
+
 import {
   Box,
   Typography,
@@ -49,14 +50,23 @@ const Dashboard = () => {
     fetchCurrentUser();
   }, []);
 
+  const handleLogout = () => {
+    navigate("/login");
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
         Hello, {username}
       </Typography>
-      <Button variant="contained" color="primary" sx={{ mb: 2 }}>
-        Create Contact
-      </Button>
+      <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+        <Button variant="contained" color="primary">
+          Create Contact
+        </Button>
+        <Button variant="contained" color="error" onClick={handleLogout}>
+          Logout
+        </Button>
+      </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="contacts table">
           <TableHead>
