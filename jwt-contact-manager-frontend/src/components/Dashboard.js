@@ -14,12 +14,26 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import CreateContactForm from "./CreateContactForm";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [contacts, setContacts] = useState([]);
   const [username, setUsername] = useState("");
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const navigate = useNavigate();
+
+  const handleOpenCreateModal = () => {
+    setOpenCreateModal(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setOpenCreateModal(false);
+  };
+
+  const handleCreateSuccess = (newContact) => {
+    setContacts([...contacts, newContact]);
+  };
 
   // Function to fetch contacts
   const fetchContacts = async () => {
@@ -60,12 +74,21 @@ const Dashboard = () => {
         Hello, {username}
       </Typography>
       <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpenCreateModal}
+        >
           Create Contact
         </Button>
         <Button variant="contained" color="error" onClick={handleLogout}>
           Logout
         </Button>
+        <CreateContactForm
+          open={openCreateModal}
+          handleClose={handleCloseCreateModal}
+          handleCreateSuccess={handleCreateSuccess}
+        />
       </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="contacts table">
