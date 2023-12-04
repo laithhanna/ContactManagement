@@ -46,12 +46,10 @@ const Login = () => {
       const response = await axios.post("/api/users/login", formData, {
         withCredentials: true,
       });
-      // Handle login success (e.g., navigate to dashboard or store token)
       console.log(response.data);
       setIsSubmitting(false);
 
       navigate("/dashboard");
-      // navigate('/dashboard'); // Uncomment and update with your success route
     } catch (error) {
       const errorMessage = error.response
         ? error.response.data.message

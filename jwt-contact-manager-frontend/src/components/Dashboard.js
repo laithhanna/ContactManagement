@@ -47,6 +47,19 @@ const Dashboard = () => {
     }
   };
 
+  // Function to delete a contact
+  const handleDeleteContact = async (contactId) => {
+    try {
+      await axios.delete(`/api/contacts/${contactId}`, {
+        withCredentials: true,
+      });
+      // Filter out the deleted contact from the contacts state
+      setContacts(contacts.filter((contact) => contact._id !== contactId));
+    } catch (error) {
+      console.error("Error deleting contact", error);
+    }
+  };
+
   // Function to fetch current user details
   const fetchCurrentUser = async () => {
     try {
@@ -103,7 +116,7 @@ const Dashboard = () => {
           <TableBody>
             {contacts.map((contact) => (
               <TableRow
-                key={contact.id}
+                key={contact._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -113,7 +126,9 @@ const Dashboard = () => {
                 <TableCell align="right">{contact.phone}</TableCell>
                 <TableCell align="right">
                   <Button>Edit</Button>
-                  <Button>Delete</Button>
+                  <Button onClick={() => handleDeleteContact(contact._id)}>
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
