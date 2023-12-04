@@ -1,21 +1,64 @@
 // Login.js
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import {
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Card,
   CardContent,
   Box,
-  TextField,
-  Button,
   Typography,
 } from "@mui/material";
 import NavigationButtons from "./NavigateButtons";
 
 const Login = () => {
-  // This will be updated later with actual login logic
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const [error, setError] = useState("");
 
-  const submitLoginForm = () => {
-    // Logic to handle login submission will go here
+  const { email, password } = formData;
+
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const submitLoginForm = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    if (!email || !password) {
+      setError("All fields are required");
+      setOpenErrorModal(true);
+      setIsSubmitting(false);
+      return;
+    }
+    try {
+      const response = await axios.post("/api/users/login", formData, {
+        withCredentials: true,
+      });
+      // Handle login success (e.g., navigate to dashboard or store token)
+      console.log(response.data);
+      setIsSubmitting(false);
+      // navigate('/dashboard'); // Uncomment and update with your success route
+    } catch (error) {
+      setError(error.response.data.message || "An error occurred during login");
+      setOpenErrorModal(true);
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    setOpenErrorModal(false);
+  };
+
   return (
     <Box
       display="flex"
@@ -30,28 +73,50 @@ const Login = () => {
               Login
             </Typography>
           </Box>
-          {/* Form will go here */}
-          <form>
+          <form onSubmit={submitLoginForm}>
             <TextField
               label="Email"
               variant="outlined"
+              name="email"
+              value={email}
+              onChange={onChange}
               fullWidth
               margin="normal"
             />
             <TextField
               label="Password"
               variant="outlined"
+              name="password"
+              value={password}
+              onChange={onChange}
               fullWidth
               margin="normal"
               type="password"
             />
           </form>
           <NavigationButtons
-            isSubmitting={false}
+            isSubmitting={isSubmitting}
             submitForm={submitLoginForm}
           />
         </CardContent>
       </Card>
+
+      {/* Error Modal */}
+      <Dialog open={openErrorModal} onClose={handleClose}>
+        <DialogTitle
+          sx={{ backgroundColor: "error.main", color: "common.white" }}
+        >
+          Error
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>{error}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="contained" color="error">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

@@ -55,6 +55,7 @@ const Register = () => {
     } catch (error) {
       setError(error.response.data.message);
       setOpenErrorModal(true);
+      setIsSubmitting(false);
     }
   };
 
