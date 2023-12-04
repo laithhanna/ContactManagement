@@ -65,6 +65,7 @@ const loginUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
+      maxAge: 5 * 60 * 1000,
     });
     res.status(200).json({ message: "Logged in successfully" });
   } else {

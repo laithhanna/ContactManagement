@@ -1,6 +1,6 @@
 // Login.js
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../axios";
 import {
   TextField,
   Button,
@@ -14,9 +14,11 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import NavigationButtons from "./NavigateButtons";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -47,6 +49,8 @@ const Login = () => {
       // Handle login success (e.g., navigate to dashboard or store token)
       console.log(response.data);
       setIsSubmitting(false);
+
+      navigate("/dashboard");
       // navigate('/dashboard'); // Uncomment and update with your success route
     } catch (error) {
       setError(error.response.data.message || "An error occurred during login");
