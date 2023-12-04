@@ -15,12 +15,16 @@ import {
   Paper,
 } from "@mui/material";
 import CreateContactForm from "./CreateContactForm";
+import UpdateContactForm from "./UpdateContactForm";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [contacts, setContacts] = useState([]);
   const [username, setUsername] = useState("");
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+
   const navigate = useNavigate();
 
   const handleOpenCreateModal = () => {
@@ -33,6 +37,25 @@ const Dashboard = () => {
 
   const handleCreateSuccess = (newContact) => {
     setContacts([...contacts, newContact]);
+  };
+
+  const handleOpenUpdateModal = (contact) => {
+    setSelectedContact(contact);
+    setOpenUpdateModal(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setOpenUpdateModal(false);
+    setSelectedContact(null);
+  };
+
+  const handleUpdateSuccess = (updatedContact) => {
+    setContacts(
+      contacts.map((contact) =>
+        contact._id === updatedContact._id ? updatedContact : contact
+      )
+    );
+    handleCloseUpdateModal();
   };
 
   // Function to fetch contacts
@@ -125,7 +148,9 @@ const Dashboard = () => {
                 <TableCell align="right">{contact.email}</TableCell>
                 <TableCell align="right">{contact.phone}</TableCell>
                 <TableCell align="right">
-                  <Button>Edit</Button>
+                  <Button onClick={() => handleOpenUpdateModal(contact)}>
+                    Edit
+                  </Button>
                   <Button onClick={() => handleDeleteContact(contact._id)}>
                     Delete
                   </Button>
@@ -135,6 +160,14 @@ const Dashboard = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {selectedContact && (
+        <UpdateContactForm
+          open={openUpdateModal}
+          handleClose={handleCloseUpdateModal}
+          handleUpdateSuccess={handleUpdateSuccess}
+          contact={selectedContact}
+        />
+      )}
     </Box>
   );
 };
